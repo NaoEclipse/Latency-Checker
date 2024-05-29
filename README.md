@@ -8,6 +8,8 @@
 #### Description:
 This C++ program that measures the duration of sleep (in our case, the delay of our device).
 
+![image](https://yasosulove.discowd.com/image.png)
+
 
 ## Code
 
