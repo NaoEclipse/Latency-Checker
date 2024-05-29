@@ -1,3 +1,6 @@
+## Translations
+- [Русский](README-RU.md)
+
 ### Latency Checker 🚀
 
 ---
