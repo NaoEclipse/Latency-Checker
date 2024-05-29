@@ -8,6 +8,7 @@
 #### Description:
 This C++ program that measures the duration of sleep (in our case, the delay of our device).
 
+![img](https://github.com/NaoEclipse/Latency-Checker/blob/main/.example/LatencyChecker_1x8gHj82vi.png?raw=true)
 
 ## Code
 
