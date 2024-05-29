@@ -18,6 +18,12 @@
 #include <atomic>
 #include <windows.h>
 
+typedef NTSTATUS (NTAPI *NtQueryTimerResolutionType)(
+    PULONG MinimumResolution,
+    PULONG MaximumResolution,
+    PULONG CurrentResolution
+);
+
 std::atomic<bool> keep_running(true);
 
 void create_load() {
@@ -30,6 +36,29 @@ void create_load() {
     }
 }
 
+std::string get_timer_resolution() {
+    HMODULE ntdll = LoadLibraryA("ntdll.dll");
+    if (!ntdll) {
+        return "Failed to load ntdll.dll";
+    }
+
+    auto NtQueryTimerResolution = (NtQueryTimerResolutionType)GetProcAddress(ntdll, "NtQueryTimerResolution");
+    if (!NtQueryTimerResolution) {
+        FreeLibrary(ntdll);
+        return "Failed to get NtQueryTimerResolution address";
+    }
+
+    ULONG minimumResolution, maximumResolution, currentResolution;
+    NTSTATUS status = NtQueryTimerResolution(&minimumResolution, &maximumResolution, &currentResolution);
+    if (status == 0) {
+        FreeLibrary(ntdll);
+        return "Resolution: " + std::to_string(currentResolution / 10000.0).substr(0, 6) + "ms";
+    } else {
+        FreeLibrary(ntdll);
+        return "Failed to get timer resolution";
+    }
+}
+
 void measure_sleep_time(std::chrono::milliseconds duration) {
     for (int i = 0; i < 1; ++i) {
         auto start_time = std::chrono::high_resolution_clock::now();
@@ -39,16 +68,16 @@ void measure_sleep_time(std::chrono::milliseconds duration) {
         std::chrono::duration<double, std::milli> slept_time = end_time - start_time;
         double delta = slept_time.count() - duration.count();
         
-        std::cout << "Sleep(" << duration.count() << "ms) slept " << slept_time.count() 
+        std::string resolution = get_timer_resolution();
+        std::cout << resolution << ", Sleep(" << duration.count() << "ms) slept " << slept_time.count() 
                   << "ms (delta: " << delta << "ms)" << std::endl;
     }
 }
 
 int main() {
     timeBeginPeriod(1);
-    
-    SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
 
+    SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
     SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
 
     std::thread load_thread([](){
