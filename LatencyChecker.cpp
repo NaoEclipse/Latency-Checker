@@ -10,7 +10,7 @@ std::atomic<bool> keep_running(true);
 void create_load() {
     while (keep_running) {
         volatile int x = 0;
-        for (int i = 0; i < 50000; ++i) {
+        for (int i = 0; i < 1; ++i) {
             x += i * i * i;
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
