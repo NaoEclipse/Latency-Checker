@@ -6,8 +6,7 @@
 ---
 
 #### Description:
-This program demonstrates how to create and measure system load in C++ using multithreading,
-While the main thread measures the accuracy of sleep durations.
+This program demonstrates creating and measuring system load in C++ using multithreading. It creates a background thread that continuously performs computations, while the main thread measures the accuracy of sleep durations.
 
 
 ## Code
