@@ -8,6 +8,8 @@
 #### Описание:
 Эта программа C++, которая измеряет продолжительность сна (в нашем случае задержку нашего устройства).
 
+![img](https://github.com/NaoEclipse/Latency-Checker/blob/main/.example/LatencyChecker_1x8gHj82vi.png?raw=true)
+
 ## Код
 
 ```cpp
